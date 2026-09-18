@@ -1,0 +1,132 @@
+{
+  "S001": {
+    "name": "Alex Johnson",
+    "roll": 101,
+    "class": "10-A",
+    "phn": "+1-555-0101",
+    "marks": {
+      "mathematics": 88,
+      "physics": 82,
+      "chemistry": 79,
+      "english": 91,
+      "computer_science": 95
+    }
+  },
+  "S002": {
+    "name": "Sophia Chen",
+    "roll": 102,
+    "class": "10-A",
+    "phn": "+1-555-0102",
+    "marks": {
+      "mathematics": 95,
+      "physics": 90,
+      "chemistry": 92,
+      "english": 88,
+      "computer_science": 98
+    }
+  },
+  "S003": {
+    "name": "Liam Miller",
+    "roll": 103,
+    "class": "10-A",
+    "phn": "+1-555-0103",
+    "marks": {
+      "mathematics": 72,
+      "physics": 68,
+      "chemistry": 74,
+      "english": 80,
+      "computer_science": 85
+    }
+  },
+  "S004": {
+    "name": "Emma Davis",
+    "roll": 104,
+    "class": "10-A",
+    "phn": "+1-555-0104",
+    "marks": {
+      "mathematics": 91,
+      "physics": 85,
+      "chemistry": 89,
+      "english": 94,
+      "computer_science": 90
+    }
+  },
+  "S005": {
+    "name": "Noah Wilson",
+    "roll": 105,
+    "class": "10-A",
+    "phn": "+1-555-0105",
+    "marks": {
+      "mathematics": 65,
+      "physics": 70,
+      "chemistry": 62,
+      "english": 75,
+      "computer_science": 80
+    }
+  },
+  "S006": {
+    "name": "Olivia Taylor",
+    "roll": 106,
+    "class": "10-A",
+    "phn": "+1-555-0106",
+    "marks": {
+      "mathematics": 84,
+      "physics": 78,
+      "chemistry": 81,
+      "english": 89,
+      "computer_science": 87
+    }
+  },
+  "S007": {
+    "name": "Ethan Anderson",
+    "roll": 107,
+    "class": "10-A",
+    "phn": "+1-555-0107",
+    "marks": {
+      "mathematics": 78,
+      "physics": 80,
+      "chemistry": 75,
+      "english": 82,
+      "computer_science": 88
+    }
+  },
+  "S008": {
+    "name": "Ava Martinez",
+    "roll": 108,
+    "class": "10-A",
+    "phn": "+1-555-0108",
+    "marks": {
+      "mathematics": 96,
+      "physics": 94,
+      "chemistry": 91,
+      "english": 87,
+      "computer_science": 93
+    }
+  },
+  "S009": {
+    "name": "William Thomas",
+    "roll": 109,
+    "class": "10-A",
+    "phn": "+1-555-0109",
+    "marks": {
+      "mathematics": 59,
+      "physics": 64,
+      "chemistry": 60,
+      "english": 70,
+      "computer_science": 72
+    }
+  },
+  "S010": {
+    "name": "Isabella White",
+    "roll": 110,
+    "class": "10-A",
+    "phn": "+1-555-0110",
+    "marks": {
+      "mathematics": 89,
+      "physics": 91,
+      "chemistry": 86,
+      "english": 93,
+      "computer_science": 96
+    }
+  }
+}
