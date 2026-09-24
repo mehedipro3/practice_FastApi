@@ -2,7 +2,7 @@
   "S001": {
     "name": "Alex Johnson",
     "roll": 101,
-    "class": "10-A",
+    "class_": "10-A",
     "phn": "+1-555-0101",
     "marks": {
       "mathematics": 88,
@@ -15,7 +15,7 @@
   "S002": {
     "name": "Sophia Chen",
     "roll": 102,
-    "class": "10-A",
+    "class_": "7-A",
     "phn": "+1-555-0102",
     "marks": {
       "mathematics": 95,
@@ -28,7 +28,7 @@
   "S003": {
     "name": "Liam Miller",
     "roll": 103,
-    "class": "10-A",
+    "class_": "6-A",
     "phn": "+1-555-0103",
     "marks": {
       "mathematics": 72,
@@ -41,7 +41,7 @@
   "S004": {
     "name": "Emma Davis",
     "roll": 104,
-    "class": "10-A",
+    "class_": "7-A",
     "phn": "+1-555-0104",
     "marks": {
       "mathematics": 91,
@@ -54,7 +54,7 @@
   "S005": {
     "name": "Noah Wilson",
     "roll": 105,
-    "class": "10-A",
+    "class_": "9-A",
     "phn": "+1-555-0105",
     "marks": {
       "mathematics": 65,
@@ -67,7 +67,7 @@
   "S006": {
     "name": "Olivia Taylor",
     "roll": 106,
-    "class": "10-A",
+    "class_": "8-A",
     "phn": "+1-555-0106",
     "marks": {
       "mathematics": 84,
@@ -80,7 +80,7 @@
   "S007": {
     "name": "Ethan Anderson",
     "roll": 107,
-    "class": "10-A",
+    "class_": "10-A",
     "phn": "+1-555-0107",
     "marks": {
       "mathematics": 78,
@@ -93,7 +93,7 @@
   "S008": {
     "name": "Ava Martinez",
     "roll": 108,
-    "class": "10-A",
+    "class_": "10-A",
     "phn": "+1-555-0108",
     "marks": {
       "mathematics": 96,
@@ -106,7 +106,7 @@
   "S009": {
     "name": "William Thomas",
     "roll": 109,
-    "class": "10-A",
+    "class_": "10-A",
     "phn": "+1-555-0109",
     "marks": {
       "mathematics": 59,
@@ -119,7 +119,7 @@
   "S010": {
     "name": "Isabella White",
     "roll": 110,
-    "class": "10-A",
+    "class_": "10-A",
     "phn": "+1-555-0110",
     "marks": {
       "mathematics": 89,
@@ -127,6 +127,19 @@
       "chemistry": 86,
       "english": 93,
       "computer_science": 96
+    }
+  },
+  "S011": {
+    "name": "John Doe",
+    "roll": 10,
+    "class_": "7A",
+    "phn": "1234567890",
+    "marks": {
+      "chemistry": 89,
+      "computer_science": 93,
+      "english": 93,
+      "mathematics": 89,
+      "physics": 91
     }
   }
 }
