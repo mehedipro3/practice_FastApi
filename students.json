@@ -128,18 +128,5 @@
       "english": 93,
       "computer_science": 96
     }
-  },
-  "S011": {
-    "name": "John Doe",
-    "roll": 10,
-    "class_": "7A",
-    "phn": "1234567890",
-    "marks": {
-      "chemistry": 89,
-      "computer_science": 93,
-      "english": 93,
-      "mathematics": 89,
-      "physics": 91
-    }
   }
 }
