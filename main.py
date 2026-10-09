@@ -1,134 +1,105 @@
-from fastapi import FastAPI,Path,HTTPException,Query , Body
-from pydantic import BaseModel ,Field
-from typing import Annotated , Optional
+from fastapi import FastAPI, Depends, HTTPException
+from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
+import models
+from models import Todos
+from typing import Annotated, Optional
+from database import engine, SessionLocal
 from fastapi.responses import JSONResponse
-import json
+from router import auth
 
 app = FastAPI()
 
-class Student(BaseModel):
-    id: Annotated[str , Field(..., description="The ID of the student", example="S001")]
-    name: Annotated[str , Field(..., description="The name of the student", example="John Doe")]
-    roll: Annotated[int , Field(..., description="The roll number of the student", example=1)]
-    class_: Annotated[str , Field(..., description="The class of the student", example="10A")]
-    phn: Annotated[str , Field(..., description="The phone number of the student", example="1234567890")]
-    marks: Annotated[dict, Field(..., description="The marks of the student", example={
-      "mathematics": 89,
-      "physics": 91,
-      "chemistry": 86,
-      "english": 93,
-      "computer_science": 96
-    })]
 
+class Todo(BaseModel):
+    id : int
+    title : str
+    description : str = Field(max_length=100)
+    priority : int = Field(gt=0, lt=6)
+    completed : bool
 
-class UpdateStudent(BaseModel):
-    id: Annotated[Optional[str] , Field(default=None)]
-    name: Annotated[Optional[str] , Field(default=None)]
-    roll: Annotated[Optional[int] , Field(default=None)]
-    class_: Annotated[Optional[str] , Field(default=None)]
-    phn: Annotated[Optional[str] , Field(default=None)]
-    marks: Annotated[Optional[dict], Field(default=None)]
+class TodoUpdate(BaseModel):
+    id : Optional[int] = Field(default=None)
+    title : Optional[str] = Field( default=None)
+    description : Optional[str] = Field(default=None, max_length=100)
+    priority : Optional[int] = Field(default=None, gt=0, lt=6)
+    completed : Optional[bool] = Field( default=None)
     
-def load_data():
-    with open('students.json','r') as f:
-        data = json.load(f)
-    return data
+    
 
+models.Base.metadata.create_all(bind=engine)
+app.include_router(auth.router)
 
-def save_data(data):
-    with open('students.json','w') as f:
-        json.dump(data, f)
+    
+def get_db():
+    db = SessionLocal()
+    
+    try:
+        yield db
+    
+    finally:
+        db.close()
         
-        
+db_dependency = Annotated[Session, Depends(get_db)]
+
+@app.get('/')
+def read_todos(db : db_dependency):
+    return db.query(Todos).all()
 
 
-@app.get("/")
-def hello():
-    return "The is the student record management system"
-
-@app.get("/about")
-def about():
-    return "This is a student record management system of About Page."
-
-@app.get("/view")
-def view_students():
-    data = load_data()
-    return data
-
-
-@app.get("/view/{student_id}")
-def view_students(student_id: str = Path(..., description="The ID of the student to retrieve", examples=["S002"])):
-    data = load_data()
+@app.get('/todo/{todo_id}')
+def read_specific_todos(db : db_dependency, todo_id : int):
+    specific_todo =  db.query(Todos).filter(Todos.id == todo_id).first()
     
+    if specific_todo is not None:
+        return specific_todo
     
-    if student_id in data:
-        return data[student_id]
     else:
-        raise HTTPException(status_code = 404, detail="Student not found")
+        raise HTTPException(status_code=404, detail='todo id not found')
     
     
     
-@app.get("/sort")
-def sort_students(sorted_by: str = Query(..., description="The field to sort students by"), order: str = Query("asc", description="Sort by asc or desc")):
+@app.post('/create/')
+def create_todos(db : db_dependency, new_todo : Todo):
+    todo_model = Todos(**new_todo.model_dump())
+    db.add(todo_model)
+    db.commit()
     
-    vaild_fields = ['roll', 'class', 'phn']
+    return JSONResponse(status_code=201, content={'message' : 'Todo create successfully'}) 
     
     
-    if sorted_by not in vaild_fields:
-        raise HTTPException(status_code = 404, detail=f"Invalid sort field {vaild_fields}")
     
-    if order not in ['asc' , 'desc']:
-        raise HTTPException(status_code = 404, detail=f"Invalid order. Choose between asc and desc")
+@app.put('/edit/{todo_id}')
+def read_specific_todos(db : db_dependency, todo_id : int, update_todo : TodoUpdate):
     
-    data = load_data()
+    todo =  db.query(Todos).filter(Todos.id == todo_id).first()
     
-    sort_order = True if order == 'desc' else False
+    if todo is None:
+        raise HTTPException(status_code=404, detail='todo id not found')
     
-    sorted_data = list(data.values())
-    sorted_data.sort(key = lambda x: x[sorted_by] , reverse=sort_order)
-     
-    return sorted_data
+    
+    update_data = update_todo.model_dump(exclude_unset=True) 
+    
+    for key,value in update_data.items():
+        setattr(todo,key,value)
+        
+        
+    db.commit()
+    return JSONResponse(status_code=200, content={'message' : 'Todo updated successfully'}) 
+    
+    
+    
 
 
-
-@app.post('/create')
-def create_student(student: Student):
-    data = load_data()
+@app.delete('/delete/{todo_id}')
+def read_specific_todos(db : db_dependency, todo_id : int):
     
-    if student.id in data:
-        raise HTTPException(status_code = 400, detail="Student with this ID already exists")
+    todo =  db.query(Todos).filter(Todos.id == todo_id).first()
     
-    student_id = student.id
-    data[student_id] = student.model_dump(exclude='id')
-    marks = student.marks
-    data[student_id]['marks'] = marks
+    if todo is None:
+        raise HTTPException(status_code=404, detail='todo id not found')
     
-    save_data(data)
-    return JSONResponse(content={"message": "Student created successfully"}, status_code=201)
-
-
-
-@app.put('/edit/{student_id}')
-def update_student(student_id: str, student: UpdateStudent):
-    data = load_data()
-    
-    if student_id not in data:
-        raise HTTPException(status_code = 404, detail="Student not found")
-    
-    data[student_id].update(student.model_dump(exclude_unset=True))
-    
-    save_data(data)
-    return JSONResponse(content={"message": "Student updated successfully"}, status_code=200)
-
-
-
-@app.delete('/delete/{student_id}')
-def delete_student(student_id: str):
-    data = load_data()
-    
-    if student_id not in data:
-        raise HTTPException(status_code = 404, detail="Student not found")
-    
-    del data[student_id]
-    save_data(data)
-    return JSONResponse(content={"message": "Student deleted successfully"}, status_code=200)
+    db.query(Todos).filter(Todos.id == todo_id).delete()
+       
+    db.commit()
+    return JSONResponse(status_code=200, content={'message' : 'Todo deleted successfully'}) 
