@@ -6,17 +6,17 @@ from models import Todos
 from typing import Annotated, Optional
 from database import engine, SessionLocal
 from fastapi.responses import JSONResponse
+from router.auth import get_current_user
 from router import auth
 
 app = FastAPI()
 
 
 class Todo(BaseModel):
-    id : int
     title : str
     description : str = Field(max_length=100)
     priority : int = Field(gt=0, lt=6)
-    completed : bool
+    completed : bool = False
 
 class TodoUpdate(BaseModel):
     id : Optional[int] = Field(default=None)
@@ -41,6 +41,7 @@ def get_db():
         db.close()
         
 db_dependency = Annotated[Session, Depends(get_db)]
+user_dependency = Annotated[dict, Depends(get_current_user)]
 
 @app.get('/')
 def read_todos(db : db_dependency):
@@ -60,8 +61,12 @@ def read_specific_todos(db : db_dependency, todo_id : int):
     
     
 @app.post('/create/')
-def create_todos(db : db_dependency, new_todo : Todo):
-    todo_model = Todos(**new_todo.model_dump())
+def create_todos(user : user_dependency ,db : db_dependency, new_todo : Todo):
+    
+    if user is None:
+        raise HTTPException(status_code=401, detail='user not found')
+    
+    todo_model = Todos(**new_todo.model_dump(), owners_id = user.get('id'))
     db.add(todo_model)
     db.commit()
     
