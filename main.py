@@ -44,13 +44,19 @@ db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
 @app.get('/')
-def read_todos(db : db_dependency):
-    return db.query(Todos).all()
+def read_todos(user: user_dependency, db : db_dependency):
+    
+    if user is None:
+        raise HTTPException(status_code=401, detail='user not found')
+        
+    return db.query(Todos).filter(Todos.owners_id == user.get('id')).all()
 
 
 @app.get('/todo/{todo_id}')
-def read_specific_todos(db : db_dependency, todo_id : int):
-    specific_todo =  db.query(Todos).filter(Todos.id == todo_id).first()
+def read_specific_todos(user : user_dependency, db : db_dependency, todo_id : int):
+    if user is None:
+        raise HTTPException(status_code=401, detail='user not found')
+    specific_todo =  db.query(Todos).filter(Todos.owners_id == user.get('id')).all().filter(Todos.id == todo_id).first()
     
     if specific_todo is not None:
         return specific_todo
@@ -75,9 +81,12 @@ def create_todos(user : user_dependency ,db : db_dependency, new_todo : Todo):
     
     
 @app.put('/edit/{todo_id}')
-def read_specific_todos(db : db_dependency, todo_id : int, update_todo : TodoUpdate):
+def read_specific_todos(user : user_dependency,db : db_dependency, todo_id : int, update_todo : TodoUpdate):
     
-    todo =  db.query(Todos).filter(Todos.id == todo_id).first()
+    if user is None:
+            raise HTTPException(status_code=401, detail='user not found')
+    
+    todo =  db.query(Todos).filter(Todos.owners_id == user.get('id')).filter(Todos.id == todo_id).first()
     
     if todo is None:
         raise HTTPException(status_code=404, detail='todo id not found')
@@ -97,14 +106,17 @@ def read_specific_todos(db : db_dependency, todo_id : int, update_todo : TodoUpd
 
 
 @app.delete('/delete/{todo_id}')
-def read_specific_todos(db : db_dependency, todo_id : int):
+def read_specific_todos(user : user_dependency, db : db_dependency, todo_id : int):
     
-    todo =  db.query(Todos).filter(Todos.id == todo_id).first()
+    if user is None:
+        raise HTTPException(status_code=401, detail='user not found')
+    
+    todo =  db.query(Todos).filter(Todos.owners_id == user.get('id')).filter(Todos.id == todo_id).first()
     
     if todo is None:
         raise HTTPException(status_code=404, detail='todo id not found')
     
-    db.query(Todos).filter(Todos.id == todo_id).delete()
+    db.query(Todos).filter(Todos.owners_id == user.get('id')).filter(Todos.id == todo_id).delete()
        
     db.commit()
     return JSONResponse(status_code=200, content={'message' : 'Todo deleted successfully'}) 

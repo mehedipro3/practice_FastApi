@@ -9,6 +9,7 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt
+from sqlalchemy.exc import IntegrityError
 
 router = APIRouter()
 
@@ -69,6 +70,12 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 @router.post('/createUser')
 def create_users(db : db_dependency, new_user : CreateUsers):
+    existing_user = db.query(Users).filter(
+        (Users.email == new_user.email) | (Users.username == new_user.username)
+    ).first()
+    if existing_user is not None:
+        raise HTTPException(status_code=409, detail='Email or username already registered')
+
     user_model = Users(
         email = new_user.email,
         username = new_user.username,
@@ -79,7 +86,16 @@ def create_users(db : db_dependency, new_user : CreateUsers):
         role = new_user.role
     )
     db.add(user_model)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        existing_user = db.query(Users).filter(
+            (Users.email == new_user.email) | (Users.username == new_user.username)
+        ).first()
+        if existing_user is not None:
+            raise HTTPException(status_code=409, detail='Email or username already registered')
+        raise
     
     return JSONResponse(status_code=201, content={'message' : 'User created successfully'}) 
     
