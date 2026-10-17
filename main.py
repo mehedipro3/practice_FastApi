@@ -7,7 +7,7 @@ from typing import Annotated, Optional
 from database import engine, SessionLocal
 from fastapi.responses import JSONResponse
 from router.auth import get_current_user
-from router import auth
+from router import auth, admin
 
 app = FastAPI()
 
@@ -29,7 +29,7 @@ class TodoUpdate(BaseModel):
 
 models.Base.metadata.create_all(bind=engine)
 app.include_router(auth.router)
-
+app.include_router(admin.router)
     
 def get_db():
     db = SessionLocal()
