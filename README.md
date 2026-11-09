@@ -6,8 +6,8 @@ This project helped me understand how to build RESTful APIs, perform CRUD operat
 
 ## 🌐 Live Demo
 
-- **Live API:** https://fastapi-project-uat0.onrender.com/
-- **Interactive API Documentation (Swagger UI):** https://fastapi-project-uat0.onrender.com/docs
+- **Live API:** https://practice-fastapi-cp6x.onrender.com/
+- **Interactive API Documentation (Swagger UI):** https://practice-fastapi-cp6x.onrender.com/docs
 - **GitHub Repository:** https://github.com/mehedipro3/practice_FastApi
 
 ## ✨ Features
