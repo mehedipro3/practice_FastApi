@@ -1,10 +1,18 @@
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-SQLALCHEMY_DATABASE_URL = 'postgresql://postgres.wkmaaljvxlkmrtbnvvvp:Mehedi301910Hasan@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres'
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres.wkmaaljvxlkmrtbnvvvp:Mehedi301910Hasan@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres"
 
-SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"sslmode": "require"}
+)
+
+SessionLocal = sessionmaker(
+    autoflush=False,
+    autocommit=False,
+    bind=engine
+)
 
 Base = declarative_base()
